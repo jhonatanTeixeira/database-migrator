@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "db_migrator"
+version = "0.1.0"
+description = ""
+authors = ["Jhonatan Teixeira <jhonatan.teixeira@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sqlacodegen = "^2.3.0"
+alembic = "^1.5.8"
+invoke = "^1.5.0"
+cx_oracle = "^8.1.0"
+psycopg2 = "^2.8.6"
+sqlalchemy-pagination = "^0.0.2"
+sqlalchemy = "~1.3.0"
+python-dotenv = "^0.16.0"
+console-progressbar = "^1.1.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
