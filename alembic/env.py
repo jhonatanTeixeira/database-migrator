@@ -28,6 +28,13 @@ target_metadata = model.metadata
 # ... etc.
 
 
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table" and reflected and compare_to is None:
+        return False
+    else:
+        return True
+
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
 
@@ -47,6 +54,7 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         include_schemas=True,
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -67,10 +75,12 @@ def run_migrations_online():
     )
 
     with connectable.connect() as connection:
+        # connection.execution_options(schema_translate_map={"systextil": "public"})
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
             include_schemas=True,
+            include_object=include_object,
         )
 
         with context.begin_transaction():
