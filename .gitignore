@@ -1,3 +1,5 @@
+.idea
 .env
 model.py
 venv
+alembic/versions/*
