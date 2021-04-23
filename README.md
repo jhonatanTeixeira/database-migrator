@@ -30,7 +30,8 @@ $ poetry install
 
 ## Usage
 
-Configure your environment, you need to inform a conection to the source db and the destination db
+Configure your environment, you need to inform a conection to the source db and the destination db. you can use 
+environment variables or a .env file like the following:
 
 ```properties
 SOURCE_CONNECTION=oracle+cx_oracle://user:passwrod@connection_sring
