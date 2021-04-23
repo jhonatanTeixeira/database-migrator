@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+'autonumber
+
+database "Source Database" as sdb
+control "Migration Workers" as dbmigrator
+control "sqlacodegen" as codegen
+control "Alembic" as alembic
+database "Destination Database" as ddb
+
+dbmigrator -> codegen: Ask for model generation for tables
+codegen -> sdb: Get tables \nmetadata
+sdb --> codegen
+codegen --> dbmigrator: Store generated models
+...
+dbmigrator -> alembic: Asks for migrations generation
+alembic -> ddb: Makes diff from \nmodel with database
+alembic -> dbmigrator: Store generated migrations
+...
+dbmigrator -> ddb: *Run migrations\n* Delete migrations\n* Drop version table
+ddb --> dbmigrator
+...
+dbmigrator -> sdb: Select paginated \nsource data
+sdb --> dbmigrator
+dbmigrator -> ddb: * Check row exists\n* Merge data or create\n* Save data
+
+
+@enduml

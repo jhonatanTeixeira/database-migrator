@@ -1,5 +1,6 @@
 .idea
 .env
-model.py
+model*
 venv
 alembic/versions/*
+labs

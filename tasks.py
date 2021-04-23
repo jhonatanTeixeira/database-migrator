@@ -38,8 +38,12 @@ def replace_types(c):
 
 
 @task
-def create_models(c, tables, source_schema='public', destination_schema='public'):
+def create_models(c, tables, source_schema='public', destination_schema=None):
     logger.info(f'generating model for {tables}')
+
+    if destination_schema is None:
+        destination_schema = source_schema
+
     c.run(f'sqlacodegen --tables {tables} --schema {source_schema} --noinflect '
           f'--outfile model.py {config.source_connection}', echo=True)
     lib.replace_types()
@@ -64,8 +68,21 @@ def create_migrations(c):
     update_database(c, True)
 
 
-@task
+@task(help={
+    'tables': 'Comma separated source database tables name you wish to migrate to destination database',
+    'max-workers': 'Maximum number of forked parallel processes to use, defaults to 30 (very machine dependant)',
+    'page-size': 'The process will paginate all data and each page runs on a parallel process, this param sets the '
+                 'page size, defaults to 30',
+    'source-schema': 'For databases that supports schemas this option can be used to set the source schema, '
+                     'defaults to public',
+    'destination-schema': 'For databases that supports schemas this option can be used to set the destination schema, '
+                          'defaults to public',
+})
 def transfer_data(c, tables, max_workers=30, page_size=30, source_schema='public', destination_schema='public'):
+    """
+    Transfers data from the source database to the destination database, given the tables specified
+    """
+
     create_models(c, tables, source_schema, destination_schema)
     update_database(c)
     migrate_data(c, tables, max_workers, page_size, source_schema, destination_schema)

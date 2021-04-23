@@ -1,6 +1,8 @@
+import os
 from logging.config import fileConfig
 
 from alembic.script import write_hooks
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -9,6 +11,8 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 import model
+
+load_dotenv()
 
 config = context.config
 
@@ -72,10 +76,10 @@ def run_migrations_online():
         config.get_section(config.config_ini_section),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        url=os.getenv('DESTINATION_CONNECTION')
     )
 
     with connectable.connect() as connection:
-        # connection.execution_options(schema_translate_map={"systextil": "public"})
         context.configure(
             connection=connection,
             target_metadata=target_metadata,

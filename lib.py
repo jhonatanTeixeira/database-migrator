@@ -121,6 +121,7 @@ def replace_for_destination_schema(source_schema, destination_schema, model_file
     code = read_file(model_file)
 
     code = code.replace(f"'schema': '{source_schema}'", f"'schema': '{destination_schema}'")
+    code = code.replace(f"{source_schema}.", f"{destination_schema}.")
 
     write_file(code, model_file)
     logger.debug(f'replaced source schema {source_schema} for destination schema {destination_schema}')
@@ -130,7 +131,7 @@ def drop_alembic_version():
     destination_session = get_destination_session()
     destination_session.execute(text('drop table alembic_version'))
     destination_session.commit()
-    logger.info('alembic version table droped')
+    logger.info('alembic version table dropped')
 
 
 def get_migrations():
